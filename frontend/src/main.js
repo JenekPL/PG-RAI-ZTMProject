@@ -11,6 +11,6 @@ Vue.use(BootstrapVue)
 
 new Vue({
   el: '#app',
-  render: h => h(store.getters.isLogged ? Login : App)
+  render: h => h(store.getters.isLogged ? App : Login)
 })
 

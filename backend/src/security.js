@@ -1,7 +1,8 @@
 const secret = "WGTmFQr7H88RaMTpjX3vY8xOgv63XTXg"
-const errors = require('./errors')
 
-class Security {
+import { errInvalidCredentials } from './errors'
+
+export class Security {
     getToken(username) {
         return jwt.sign({ "sub": username }, secret)
     }
@@ -9,12 +10,12 @@ class Security {
         try {
             return jwt.verify(token, secret).sub
         } catch (_) {
-            throw new Error(errors.invalidCredentials)
+            throw new Error(errInvalidCredentials)
         }
     }
 }
 
-class MockSecurity {
+export class MockSecurity {
 
     constructor({getToken, verifyToken, decodeToken}) {
         this.getToken = getToken
@@ -23,4 +24,3 @@ class MockSecurity {
     }
 }
 
-module.exports = { Security, MockSecurity }

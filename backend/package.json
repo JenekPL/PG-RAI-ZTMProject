@@ -4,17 +4,21 @@
   "description": "University project",
   "main": "main.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha -r esm",
+    "start": "node -r esm --inspect-brk --inspect=0.0.0.0:9229 main.js"
   },
   "author": "Mateusz Jenek",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "express-bearer-token": "^2.4.0",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.3.5"
+    "mongodb": "^3.3.5",
+    "esm": "^3.2.25"
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "mocha": "^6.2.2"
   }
 }

@@ -1,32 +1,43 @@
-const errors = require('./errors')
+import { errInvalidCredentials } from './errors'
 
-class GetFavouriteStops {
+export class GetFavouriteStops {
     constructor(repository, security) {
         this.repository = repository
         this.security = security
     }
 
     call(token) {
-        var username = this.security.verifyToken(token)
-        return this.repository.getFavouriteStops(username)
+        return new Promise(async (resolve, reject) => {
+            try {
+                const username = this.security.verifyToken(token)
+                const user = await this.repository.getUser(username)
+                resolve(user.favouriteStops)
+            } catch(e) {
+                reject(e)
+            }
+        })
     }
 }
 
-class Authorize {
+export class GetToken {
     constructor(repository, security) {
         this.repository = repository
         this.security = security
     }
 
     call(username, password) {
-        var user = this.repository.getUser(username)
-        if (user.password != password) {
-            throw new Error(errors.invalidCredentials)
-        }
+        return new Promise(async (resolve, reject) => {
+            try {
+                const user = await this.repository.getUser(username)
 
-        return this.security.getToken(user.username, password.password)
-
+                if (user.password != password) {
+                    reject(new Error(errInvalidCredentials))
+                }
+                const token = this.security.getToken(user.username, user.password)
+                resolve(token)
+            } catch (e) {
+                reject(e)
+            }
+        })
     }
 }
-
-module.exports = { GetFavouriteStops, Authorize }

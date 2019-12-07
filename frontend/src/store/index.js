@@ -11,17 +11,13 @@ const store = new Vuex.Store({
         token: null,
         stops: [],
         favouriteStops: [],
+        selectedStop: 8227,
+        delays: []
     },
 
     getters: {
         isLogged(state) {
             return state.token !== null
-        },
-        stops(state) {
-            return state.stops
-        },
-        favouriteStops(state) {
-            return state.favouriteStops
         },
     },
 
@@ -34,6 +30,12 @@ const store = new Vuex.Store({
         },
         setFavouriteStops(state, stops) {
             state.favouriteStops = stops
+        },
+        setSelectedStop(state, stop) {
+            state.selectedStop = stop
+        },
+        setDelays(state, delays) {
+            state.delays = delays
         },
     },
 
@@ -55,6 +57,15 @@ const store = new Vuex.Store({
             FavouriteService.getStops().then(stops => {
                 commit('setFavouriteStops', stops)
             })
+        },
+        fetchDelays({commit}, stopId) {
+            ZTMService.getDelays(stopId).then(delays => {
+                commit('setDelays', delays)
+            })
+        },
+        setSelectedStop({commit, dispatch}, stop) {
+            commit('setSelectedStop', stop)
+            dispatch('fetchDelays', stop.stopId)
         },
     }
 })

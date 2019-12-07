@@ -1,30 +1,41 @@
-const errors = require('./errors')
+import { MongoClient } from 'mongodb'
 
-module.exports.InMemRepository = class InMemRepository {
+import { errUserNotExists, errConnectingToDatabase, errFetchingData } from './errors'
+import { rejects } from 'assert'
 
-    constructor(users = {}) {
+export class InMemRepository {
+    
+    constructor(users = []) {
         this.users = users
     }
-
-    getUser(username) {
-        if (!this._isUserExists(username)) {
-            throw new Error(errors.errUserNotExists)
-        }
-        return this.users[username]
-    }
-    getFavouriteStops(username) {
-        if (!this._isUserExists(username)) {
-            throw new Error(errors.errUserNotExists)
-        }
-        return this.users[username].favouriteStops
-    }
-
-    _isUserExists(username) {
-        return username in this.users
+    
+    async getUser(username) {
+        if (username in this.users) {
+            return this.users[username]
+        } 
+        throw new Error(errUserNotExists)
     }
 }
 
-module.exports.MongoRepository = class MongoRepository {
-    getUser(username) {}
-    getFavouriteStops(username) {}
+const dbName = "users"
+const collectionName = "users"
+const defaultURL  = "mongodb://localhost:27017"
+
+export class MongoRepository {
+
+    constructor(url = defaultURL) {
+        this.client = MongoClient(url, { useUnifiedTopology: true })
+    }
+
+    async getUser(username) {
+        const connectedClient = await this.client.connect()
+        if (connectedClient == null) {
+            throw new Error(`${errConnectingToDatabase}: ${error.message}`)
+        }
+        const user = await this.client.db(dbName).collection(collectionName).findOne({username})
+        if (user == null) {
+            throw new Error(errUserNotExists)
+        }
+        return user
+    }
 }

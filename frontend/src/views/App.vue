@@ -1,52 +1,40 @@
 <template>
-  <b-container class="my-5">
-    <b-row>
-      <b-col cols="6">
-        <StopsList :stops="stops" :activeStopID="activeStopID" :onItemClick="onItemClick"/>
-      </b-col>
-      <b-col cols="6">XD</b-col>
-    </b-row>
-  </b-container>
+  <div>
+    <div class="logoutBtn">
+      <b-button variant="dark" v-on:click="logout">Wyloguj</b-button>
+    </div>
+    <StopDetails />
+    <StopsList />
+  </div>
 </template>
 
 <script>
 
 //import store from "../store"
 import StopsList from "../components/StopsList"
+import StopDetails from "../components/StopDetails"
+import store from "../store"
 
 export default {
   name: "App",
   mounted() {},
-  data: () => ({
-    activeStopID: 0,
-    stops: [
-      {
-        id: 0,
-        name: "Miszewskiego",
-        isFavourite: true
-      },
-      {
-        id: 1,
-        name: "Brama wyżynna",
-        isFavourite: false
-      },
-      {
-        id: 2,
-        name: "Firoga",
-        isFavourite: true
-      }
-    ]
-  }),
-  methods: {
-      onItemClick(stopID) {
-            this.activeStopID = stopID
-        }
-
+  data: () => ({ }),
+  methods: { 
+    logout() {
+      store.dispatch('logout')
+    }
   },
   components: {
-      StopsList
+      StopsList,
+      StopDetails
   }
-};
+}
 </script>
 
-<style scoped></style>
+<style scoped>
+.logoutBtn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+</style>
