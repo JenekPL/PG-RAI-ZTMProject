@@ -1,6 +1,6 @@
-# ZTM in JS
+# Public transport
 
-Application to browse public transport stops in 3city. Made in Vue.js and express as univeristy project
+Public transport is a web application, which allows user to browse in real time what is happeing on public trasport stops in 3city (Poland). Made in Vue.js and express as univeristy project.
 
 ## Installation
 
